@@ -19,13 +19,12 @@ const app = express();
 app.use(express.json());
 // This creates an "approved list" of addresses
 const allowedOrigins = [
-    'http://localhost:5173', // Your local dev address
-    // ❗️ REPLACE WITH YOUR LIVE FRONTEND URL
+    'http://localhost:5173',                   // For local development
+    'https://billboard-inspect.netlify.app'    // Your live Netlify URL
 ];
 
-app.use(cors({
+const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests from the approved list
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -33,7 +32,9 @@ app.use(cors({
         }
     },
     credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
