@@ -17,7 +17,23 @@ const BillboardModel = require('./models/Billboard');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+// This creates an "approved list" of addresses
+const allowedOrigins = [
+    'http://localhost:5173', // Your local dev address
+    'https://billboard-1.onrender.com' // ❗️ REPLACE WITH YOUR LIVE FRONTEND URL
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests from the approved list
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
