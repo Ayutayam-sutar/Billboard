@@ -20,7 +20,7 @@ app.use(express.json());
 // This creates an "approved list" of addresses
 const allowedOrigins = [
     'http://localhost:5173', // Your local dev address
-    'https://billboard-inspect.netlify.app/' // ❗️ REPLACE WITH YOUR LIVE FRONTEND URL
+    // ❗️ REPLACE WITH YOUR LIVE FRONTEND URL
 ];
 
 app.use(cors({
