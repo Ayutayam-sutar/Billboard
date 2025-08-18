@@ -1,0 +1,7 @@
+{
+  "name": "Billboard Inspector AI",
+  "description": "An AI-powered application to detect and report non-compliant billboards, promoting urban safety and aesthetics. Users can upload images of billboards, and the app will analyze them for potential violations based on regulatory standards.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
