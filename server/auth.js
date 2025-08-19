@@ -16,18 +16,13 @@ const EmployeeModel = require('./models/Employee');
 const BillboardModel = require('./models/Billboard');
 
 const app = express();
-
-// 🔹 parse incoming JSON
 app.use(express.json());
 
-// 🔹 parse form data (optional, but good for file uploads / forms)
-app.use(express.urlencoded({ extended: true }));
+// --- BRICK 1 FIX: Correct CORS Configuration ---
 const allowedOrigins = [
   "http://localhost:5173",
   "https://billboard-inspect.netlify.app",
-  "https://billboard-1.onrender.com",
 ];
-
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -36,10 +31,9 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true // only if you use cookies/sessions
+  credentials: true
 };
-
-app.use(cors({ origin: "*" }));
+app.use(cors(corsOptions));
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
