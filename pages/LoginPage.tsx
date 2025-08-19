@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; 
 import { User } from '../types'; 
+import api from '../api';
 
 
 const CameraIcon = ({ className }) => ( <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M9 3h6l2 2h4a1 1 0 011 1v12a1 1 0 01-1-1H3a1 1 0 01-1-1V6a1 1 0 011-1h4l2-2zm3 16a5 5 0 100-10 5 5 0 000 10zm0-2a3 3 0 100-6 3 3 0 000 6z"/></svg>);
@@ -26,6 +27,8 @@ const LoginPage = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+ const [error, setError] = useState(''); 
+
 
     const formVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -33,44 +36,37 @@ const LoginPage = ({ onLogin }) => {
         exit: { opacity: 0, y: -20, transition: { duration: 0.2, ease: 'easeIn' } },
     };
     
-    const handleFormSubmit = (e) => {
+     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(''); // Clear previous errors
 
         if (isSignUp) {
-            axios.post('http://localhost:3001/register', { name, email, password })
-                .then(result => {
-                    console.log(result);
-                    alert('Registration successful! Please sign in to continue.');
-                    setIsSignUp(false);
-                })
-                .catch(err => {
-                    console.log(err);
-                    alert('Registration failed. The email might already be in use.');
-                });
-        }else {
-    axios.post('https://billboard-txgu.onrender.com/login', { email, password }, {
-        headers: { "Content-Type": "application/json" }
-    })
-    .then(result => {
-        if (result.data.message === "Success" && result.data.token) {
-            const token = result.data.token;
-            localStorage.setItem('token', token);
-
-            // Decode the token to get user info
-            const decodedUser: User = jwtDecode(token);
-
-            // Pass the user object DIRECTLY to App.tsx
-            onLogin(decodedUser);
+            if (password !== confirmPassword) {
+                return setError("Passwords do not match!");
+            }
+            try {
+                // 2. Use 'api.post' which automatically uses the correct server address
+                await api.post('/register', { name, email, password });
+                alert('Registration successful! Please sign in to continue.');
+                setIsSignUp(false);
+            } catch (err: any) {
+                setError(err.response?.data?.message || 'Registration failed.');
+            }
         } else {
-            alert(result.data.message || 'Login failed.');
+            try {
+                // 2. Use 'api.post' here as well
+                const result = await api.post('/login', { email, password });
+                if (result.data.token) {
+                    const token = result.data.token;
+                    // 3. Use the CORRECT key to save the token
+                    localStorage.setItem('billboard_inspector_token', token);
+                    const decodedUser: User = jwtDecode(token);
+                    onLogin(decodedUser);
+                }
+            } catch (err: any) {
+                setError(err.response?.data?.message || 'Login failed. Check credentials.');
+            }
         }
-    })
-    .catch(err => {
-        console.log(err);
-        alert('Login failed. Please check your credentials and try again.');
-    });
-}
-
     };
 
     const handleGoogleAuth = () => {
