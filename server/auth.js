@@ -43,6 +43,7 @@ app.use(cors({ origin: "*" }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
 mongoose.connect("mongodb+srv://juggernauts6996:shreeram@cluster0.su7f7c3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log("✅ Successfully connected to MongoDB Atlas"))
   .catch(err => console.error("❌ MongoDB connection error:", err));
