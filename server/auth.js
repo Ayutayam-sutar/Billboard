@@ -24,7 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://billboard-inspect.netlify.app"
+  "https://billboard-inspect.netlify.app",
+  "https://billboard-1.onrender.com",
 ];
 
 const corsOptions = {
