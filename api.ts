@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // This is the smart part. It will use your live URL when deployed,
 // but it will still use localhost when you are running it on your own computer.
-const API_BASE_URL ='https://your-backend-name.onrender.com' ;
+const API_BASE_URL ='https://billboard-txgu.onrender.com/' ;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
