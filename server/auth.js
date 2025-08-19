@@ -16,6 +16,12 @@ const EmployeeModel = require('./models/Employee');
 const BillboardModel = require('./models/Billboard');
 
 const app = express();
+
+// 🔹 parse incoming JSON
+app.use(express.json());
+
+// 🔹 parse form data (optional, but good for file uploads / forms)
+app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
   "http://localhost:5173",
   "https://billboard-inspect.netlify.app"
@@ -171,7 +177,8 @@ app.post('/analyze-hybrid', verifyUser, upload.single('billboardImage'), async (
         const imagePath = req.file.path;
         const imageMimeType = mime.lookup(imagePath);
         const userId = req.user.id;
-        const imageUrl = `http://localhost:3001/uploads/${req.file.filename}`;
+      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001";
+const imageUrl = `${backendUrl}/uploads/${req.file.filename}`;
 
         if (!imageMimeType) {
             return res.status(400).json({ message: "Could not determine image type." });
