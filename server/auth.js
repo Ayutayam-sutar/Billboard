@@ -16,25 +16,24 @@ const EmployeeModel = require('./models/Employee');
 const BillboardModel = require('./models/Billboard');
 
 const app = express();
-app.use(express.json());
-// This creates an "approved list" of addresses
 const allowedOrigins = [
-    'http://localhost:5173',                   // For local development
-    'https://billboard-inspect.netlify.app'    // Your live Netlify URL
+  "http://localhost:5173",
+  "https://billboard-inspect.netlify.app"
 ];
 
 const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true // only if you use cookies/sessions
 };
 
-app.use(cors(corsOptions));
+app.use(cors({ origin: "*" }));
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
