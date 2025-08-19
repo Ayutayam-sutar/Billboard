@@ -94,7 +94,7 @@ const LoginPage = ({ onLogin }) => {
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
                     <div className="flex items-center space-x-3">
                         <div className=" rounded-xl ">
-                            <img src=" logo.png" className="h-10 w-10 rounded-full" alt="" />
+                            <img src="logo.png" className="h-10 w-10 rounded-full" alt="" />
                         </div>
                         <span className=" animate-tracking-in-expand text-2xl font-bold bg-gradient-to-r from-red-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
                             Billboard Inspector
