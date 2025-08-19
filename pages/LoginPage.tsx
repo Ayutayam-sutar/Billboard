@@ -47,27 +47,30 @@ const LoginPage = ({ onLogin }) => {
                     console.log(err);
                     alert('Registration failed. The email might already be in use.');
                 });
+        }else {
+    axios.post('https://billboard-txgu.onrender.com/login', { email, password }, {
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(result => {
+        if (result.data.message === "Success" && result.data.token) {
+            const token = result.data.token;
+            localStorage.setItem('token', token);
+
+            // Decode the token to get user info
+            const decodedUser: User = jwtDecode(token);
+
+            // Pass the user object DIRECTLY to App.tsx
+            onLogin(decodedUser);
         } else {
-            axios.post('http://localhost:3001/login', { email, password })
-                .then(result => {
-                    if (result.data.message === "Success" && result.data.token) {
-                        const token = result.data.token;
-                        localStorage.setItem('token', token);
-                        
-                        // Decode the token to get user info
-                        const decodedUser: User = jwtDecode(token);
-                        
-                        // Pass the user object DIRECTLY to App.tsx
-                        onLogin(decodedUser);
-                    } else {
-                        alert(result.data.message || 'Login failed.');
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    alert('Login failed. Please check your credentials and try again.');
-                });
+            alert(result.data.message || 'Login failed.');
         }
+    })
+    .catch(err => {
+        console.log(err);
+        alert('Login failed. Please check your credentials and try again.');
+    });
+}
+
     };
 
     const handleGoogleAuth = () => {
