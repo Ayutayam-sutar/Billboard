@@ -1,3 +1,13 @@
+# For the YOLO model
 ultralytics
 torch
 torchvision
+Pillow
+
+# For the web server API
+fastapi
+uvicorn
+python-multipart
+
+# For the Gemini AI model
+google-generativeai

@@ -6,19 +6,19 @@ const cors = require("cors");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios'); // We'll use axios to call Hugging Face
+const FormData = require('form-data'); // And form-data to send the image
 require('dotenv').config();
-const { analyzeWithGemini } = require('./services/geminiService');
-const mime = require('mime-types');
+
 const EmployeeModel = require('./models/Employee');
 const BillboardModel = require('./models/Billboard');
 
 const app = express();
 app.use(express.json());
 
-// --- BRICK 1 FIX: Correct CORS Configuration ---
+// --- CORS Configuration ---
 const allowedOrigins = [
   "http://localhost:5173",
   "https://billboard-inspect.netlify.app",
@@ -35,14 +35,16 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-
+// --- Static File Serving ---
+// This makes sure your backend can serve the uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-mongoose.connect("mongodb+srv://juggernauts6996:shreeram@cluster0.su7f7c3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+// --- Database Connection ---
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Successfully connected to MongoDB Atlas"))
   .catch(err => console.error("❌ MongoDB connection error:", err));
 
+// --- Multer Configuration for File Uploads ---
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) { fs.mkdirSync(uploadsDir); }
 const storage = multer.diskStorage({
@@ -51,12 +53,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// --- MIDDLEWARE ---
+// --- JWT Middleware ---
 const verifyUser = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (authHeader) {
         const token = authHeader.split(" ")[1];
-        jwt.verify(token, "your_jwt_secret_key", (err, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(403).json({ message: "Token is not valid" });
             }
@@ -68,33 +70,7 @@ const verifyUser = (req, res, next) => {
     }
 };
 
-// Helper function to run YOLO analysis
-const runYoloAnalysis = (imagePath) => {
-    return new Promise((resolve, reject) => {
-        const pythonScriptPath = path.join(__dirname, 'python_model', 'test_model.py');
-        const pythonProcess = spawn('python', [pythonScriptPath, imagePath]);
-        let analysisResultJson = '', errorOutput = '';
-        
-        pythonProcess.stdout.on('data', (data) => { analysisResultJson += data.toString(); });
-        pythonProcess.stderr.on('data', (data) => { errorOutput += data.toString(); });
-        
-        pythonProcess.on('close', (code) => {
-            if (code !== 0) {
-                console.error(`Python Error: ${errorOutput}`);
-                return reject(new Error("YOLO analysis failed"));
-            }
-            try {
-                const analysisResult = JSON.parse(analysisResultJson);
-                resolve(analysisResult);
-            } catch (parseError) {
-                console.error("Error parsing YOLO results:", parseError);
-                reject(parseError);
-            }
-        });
-    });
-};
-
-// --- AUTHENTICATION ROUTES ---
+// --- Authentication Routes ---
 app.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -117,7 +93,7 @@ app.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) { return res.status(400).json({ message: "Invalid credentials" }); }
         const payload = { id: user._id, name: user.name };
-        const token = jwt.sign(payload, "your_jwt_secret_key", { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ message: "Success", token: token });
     } catch (err) {
         console.error("Error in /login:", err);
@@ -125,7 +101,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// --- DATA & AI ROUTES ---
+// --- Data Routes ---
 app.get('/my-billboards', verifyUser, async (req, res) => {
     try {
         const userId = req.user.id;
@@ -136,89 +112,73 @@ app.get('/my-billboards', verifyUser, async (req, res) => {
     }
 });
 
-// Original YOLOv8-only analysis route
-// app.post('/analyze-billboard', verifyUser, upload.single('billboardImage'), (req, res) => {
-//     if (!req.file) { return res.status(400).json({ message: "No image file uploaded." });}
-//     const imagePath = req.file.path;
-//     const pythonScriptPath = path.join(__dirname, 'python_model', 'test_model.py');
-//     const pythonProcess = spawn('python', [pythonScriptPath, imagePath]);
-//     let analysisResultJson = '', errorOutput = '';
-//     pythonProcess.stdout.on('data', (data) => { analysisResultJson += data.toString(); });
-//     pythonProcess.stderr.on('data', (data) => { errorOutput += data.toString(); });
-//     pythonProcess.on('close', async (code) => {
-//         if (code !== 0) {
-//             console.error(`Python Error: ${errorOutput}`);
-//             return res.status(500).json({ message: "AI analysis failed.", error: errorOutput });
-//         }
-//         try {
-//             const analysisResult = JSON.parse(analysisResultJson);
-//             const userId = req.user.id;
-//             const imageUrl = `http://localhost:3001/uploads/${req.file.filename}`;
-//             const newBillboard = new BillboardModel({ imageUrl: imageUrl, violations: analysisResult.violations, uploadedBy: userId });
-//             const savedBillboard = await newBillboard.save();
-//             res.status(201).json(savedBillboard);
-//         } catch (parseError) {
-//             console.error("Error parsing JSON from Python script:", parseError, "Raw output:", analysisResultJson);
-//             res.status(500).json({ message: "Failed to parse AI results." });
-//         }
-//     });
-// });
-
-// New Hybrid AI Analysis Route
+// --- NEW HYBRID AI ROUTE (Calling Hugging Face) ---
 app.post('/analyze-hybrid', verifyUser, upload.single('billboardImage'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: "No image file uploaded." });
     }
+    
+    // Check if the Hugging Face URL is configured
+    if (!process.env.HUGGING_FACE_URL) {
+        console.error("❌ HUGGING_FACE_URL environment variable is not set.");
+        return res.status(500).json({ message: "AI service is not configured on the server." });
+    }
+
     try {
-        const imagePath = req.file.path;
-        const imageMimeType = mime.lookup(imagePath);
+        console.log(`Forwarding image to Hugging Face URL: ${process.env.HUGGING_FACE_URL}`);
+
+        // 1. Create a form and append the image file to it
+        const form = new FormData();
+        form.append('billboardImage', fs.createReadStream(req.file.path), req.file.filename);
+        
+        // 2. Send the form to your Hugging Face Space using axios
+        const response = await axios.post(process.env.HUGGING_FACE_URL, form, {
+            headers: {
+                ...form.getHeaders()
+            }
+        });
+
+        // 3. The AI analysis now comes from the Hugging Face response
+        const analysisResult = response.data;
+        console.log("✅ Received analysis from Hugging Face:", analysisResult);
+
+        // 4. Create the correct public URL for the saved image
+        const backendUrl = process.env.BACKEND_URL || `http://localhost:${PORT}`;
+        const imageUrl = `${backendUrl}/uploads/${req.file.filename}`;
         const userId = req.user.id;
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001";
-const imageUrl = `${backendUrl}/uploads/${req.file.filename}`;
-
-        if (!imageMimeType) {
-            return res.status(400).json({ message: "Could not determine image type." });
-        }
         
-        const yoloPromise = runYoloAnalysis(imagePath);
-        const geminiPromise = analyzeWithGemini(imagePath, imageMimeType);
-
-        const [yoloResults, geminiResults] = await Promise.all([yoloPromise, geminiPromise]);
-        
-        // --- THIS IS THE NEW, CLEARER INSPECTOR ---
-        console.log("\n<<<<< ----- THIS IS THE NEW DEBUG CODE RUNNING ----- >>>>>");
-        console.log("Gemini API returned the following violations array:");
-        console.log(geminiResults.violations);
-        // --- END OF INSPECTOR ---
-
-        const combinedViolations = [
-            ...(yoloResults.violations || []),
-            ...(geminiResults.violations || []).map(v => `Gemini: ${v.violation_type} (${v.severity}) - ${v.details}`)
-        ];
-
+        // 5. Save the results to your database
         const newBillboard = new BillboardModel({
-            imageUrl, violations: combinedViolations,
-            summary: geminiResults.summary, location_details: geminiResults.location_details,
-            is_compliant: geminiResults.is_compliant, uploadedBy: userId,
+            imageUrl: imageUrl,
+            violations: analysisResult.violations || [],
+            summary: analysisResult.summary || "No summary provided.",
+            location_details: analysisResult.location_details || {},
+            is_compliant: analysisResult.is_compliant,
+            uploadedBy: userId,
         });
 
         const savedBillboard = await newBillboard.save();
         res.status(201).json(savedBillboard);
 
     } catch (err) {
-        console.error("❌ Error in hybrid analysis:", err);
+        console.error("❌ Error calling Hugging Face or saving data:", err.message);
+        // Provide more detailed error if it's from axios
+        if (err.response) {
+            console.error("Hugging Face Response Error:", err.response.data);
+        }
         res.status(500).json({ message: "Hybrid AI analysis failed.", error: err.message });
     }
 });
 
-// --- HEALTH CHECK ROUTE ---
+
+// --- Health Check Route ---
 app.get('/health', (req, res) => {
     console.log("✅ Health check endpoint was hit!");
     res.json({ status: "ok", message: "Server is healthy" });
 });
 
-// --- START SERVER (MUST BE THE LAST THING) ---
+// --- Start Server ---
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 Server is running on port ${PORT}`);
 });
