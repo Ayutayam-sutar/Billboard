@@ -1,30 +1,36 @@
 // src/services/reportService.ts
-
-import api from '../api'; // Your pre-configured Axios instance
+import api from '../api';
 import { Report } from '../types';
 
-/**
- * Fetches all billboards for the currently logged-in user.
- */
-export const getMyBillboards = async (): Promise<Report[]> => {
+// This now fetches ALL reports from your live backend
+export const fetchMyReports = async (): Promise<Report[]> => {
+  try {
     const response = await api.get('/my-billboards');
     return response.data;
+  } catch (error) {
+    console.error('Failed to fetch reports:', error);
+    return [];
+  }
 };
 
-/**
- * Fetches a single report by its unique ID.
- * This is the function your ReportPage is missing.
- */
-export const getReportById = async (id: string): Promise<Report> => {
-    const response = await api.get(`/billboards/${id}`);
+// This now fetches a SINGLE report from your live backend
+export const getReportById = async (reportId: string): Promise<Report | null> => {
+  try {
+    const response = await api.get(`/my-billboards/${reportId}`);
     return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch report with id ${reportId}:`, error);
+    return null;
+  }
 };
 
-/**
- * Updates the status of a specific report.
- * This is for your "Submit to Municipality" button.
- */
-export const updateReportStatus = async (id: string, status: 'Reported'): Promise<Report> => {
-    const response = await api.patch(`/billboards/${id}/status`, { status });
+// This now updates a report's status on your live backend
+export const updateReportStatus = async (reportId: string, status: string): Promise<Report | null> => {
+  try {
+    const response = await api.patch(`/my-billboards/${reportId}`, { status });
     return response.data;
+  } catch (error) {
+    console.error(`Failed to update status for report ${reportId}:`, error);
+    return null;
+  }
 };

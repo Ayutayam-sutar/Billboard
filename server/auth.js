@@ -101,6 +101,50 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
+
+
+// GET a single report by its ID
+app.get('/my-billboards/:id', verifyUser, async (req, res) => {
+    try {
+        const billboard = await BillboardModel.findOne({ 
+            _id: req.params.id, 
+            uploadedBy: req.user.id 
+        });
+        if (!billboard) {
+            return res.status(404).json({ message: "Report not found or you do not have permission to view it." });
+        }
+        res.json(billboard);
+    } catch (err) {
+        console.error("Error fetching single report:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// PATCH (Update) a report's status
+app.patch('/my-billboards/:id', verifyUser, async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (!status) {
+            return res.status(400).json({ message: "Status is required." });
+        }
+        const updatedBillboard = await BillboardModel.findOneAndUpdate(
+            { _id: req.params.id, uploadedBy: req.user.id },
+            { $set: { status: status } },
+            { new: true } // This option returns the updated document
+        );
+        if (!updatedBillboard) {
+            return res.status(404).json({ message: "Report not found or you do not have permission to update it." });
+        }
+        res.json(updatedBillboard);
+    } catch (err) {
+        console.error("Error updating report status:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
+
 // --- Data Routes ---
 app.get('/my-billboards', verifyUser, async (req, res) => {
     try {
