@@ -206,7 +206,7 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-2 flex flex-col gap-6">
-           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 animate-slide-up" style={{ animationDelay: '200ms' }}>
+           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 animate-slide-up" style={{ animationDelay: '200ms' }}>
   <StatCard
     icon={<StarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
     label="SCORE"
