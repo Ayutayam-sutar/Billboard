@@ -164,8 +164,8 @@ const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
             </p>
             {/* FIX 2: Show the first violation or the summary */}
             <p className="text-xs sm:text-sm text-gray-200 line-clamp-2 max-w-xs">
-                {report.violations.length > 0 ? report.violations[0] : report.summary}
-            </p>
+    {report.violations.length > 0 ? report.violations[0].details : report.summary}
+</p>
         </div>
     </div>
   
