@@ -48,28 +48,28 @@ const ReportPage: React.FC<ReportPageProps> = ({ reportId, onReportSubmit, navig
     }
 
     if (isLoading) {
-        return <div className="text-center text-white p-8">Loading report...</div>;
+        return <div className="text-center text-gray-600 p-8">Loading report...</div>;
     }
 
     if (error) {
-        return <div className="text-center text-red-400 p-8">{error}</div>;
+        return <div className="text-center text-red-600 p-8">{error}</div>;
     }
     
     if (!report) {
-        return <div className="text-center text-white p-8">Report not found.</div>;
+        return <div className="text-center text-gray-600 p-8">Report not found.</div>;
     }
 
     if (submitted) {
         return (
-            <div className="w-full max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-2xl p-8 text-center animate-fade-in">
-                <CheckCircleIcon className="h-16 w-16 text-green-400 mx-auto" />
-                <h2 className="text-3xl font-bold text-white mt-4">Report Submitted</h2>
-                <p className="text-gray-300 mt-2">
-                    Thank you! The municipal authorities have been notified about the violations at <span className="font-semibold text-teal-300">{report.location_details}</span>.
+            <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-md p-8 text-center animate-fade-in border border-gray-200">
+                <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto" />
+                <h2 className="text-3xl font-bold text-gray-800 mt-4">Report Submitted</h2>
+                <p className="text-gray-600 mt-2">
+                    Thank you! The municipal authorities have been notified about the violations at <span className="font-semibold text-blue-600">{report.location_details}</span>.
                 </p>
                 <button
                     onClick={() => navigate ? navigate('#/dashboard') : window.location.hash = '#/dashboard'}
-                    className="mt-8 w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500"
+                    className="mt-8 w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-500 transition-colors"
                 >
                     <ArrowPathIcon className="h-5 w-5 mr-2" />
                     Back to Dashboard
@@ -80,42 +80,42 @@ const ReportPage: React.FC<ReportPageProps> = ({ reportId, onReportSubmit, navig
 
     return (
         <div className="w-full max-w-4xl mx-auto animate-fade-in">
-            <h1 className="text-3xl font-bold text-white mb-2">Submit Violation Report</h1>
-            <p className="text-gray-400 mb-6">Review the details below and submit the report to the local municipality.</p>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Submit Violation Report</h1>
+            <p className="text-gray-600 mb-6">Review the details below and submit the report to the local municipality.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                 <div className="md:col-span-2">
-                    <img src={report.imageUrl} alt="Billboard to report" className="rounded-lg shadow-xl w-full" />
+                    <img src={report.imageUrl} alt="Billboard to report" className="rounded-lg shadow-md w-full border border-gray-200" />
                 </div>
-                <div className="md:col-span-3 bg-gray-800 rounded-xl shadow-2xl p-6">
+                <div className="md:col-span-3 bg-white rounded-xl shadow-md p-6 border border-gray-200">
                     <div className="flex items-start space-x-3 mb-4">
-                        <MapIcon className="h-6 w-6 text-teal-400 flex-shrink-0 mt-1" />
+                        <MapIcon className="h-6 w-6 text-blue-500 flex-shrink-0 mt-1" />
                         <div>
-                            <h3 className="font-semibold text-white">Location</h3>
-                            <p className="text-gray-300">{report.location_details}</p>
+                            <h3 className="font-semibold text-gray-800">Location</h3>
+                            <p className="text-gray-600">{report.location_details}</p>
                         </div>
                     </div>
                     <div className="flex items-start space-x-3 mb-4">
-                        <ExclamationTriangleIcon className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
+                        <ExclamationTriangleIcon className="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" />
                         <div>
-                            <h3 className="font-semibold text-white">Summary</h3>
-                            <p className="text-gray-300">{report.summary}</p>
+                            <h3 className="font-semibold text-gray-800">Summary</h3>
+                            <p className="text-gray-600">{report.summary}</p>
                         </div>
                     </div>
                     <div>
-                        <h3 className="font-semibold text-white mb-2">Violations</h3>
+                        <h3 className="font-semibold text-gray-800 mb-2">Violations</h3>
                         <div className="space-y-2">
                             {report.violations.map((v, i) => (
-                                <ViolationCard  violation={v} />
+                                <ViolationCard violation={v} />
                             ))}
                         </div>
                     </div>
 
-                    <div className="mt-8 border-t border-gray-700 pt-6">
-                        <p className="text-xs text-gray-400 mb-4">By clicking submit, you confirm that this information is accurate and consent to it being shared with municipal authorities.</p>
+                    <div className="mt-8 border-t border-gray-200 pt-6">
+                        <p className="text-xs text-gray-500 mb-4">By clicking submit, you confirm that this information is accurate and consent to it being shared with municipal authorities.</p>
                         <button 
                             onClick={handleSubmit}
-                            className="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500 transition-transform transform hover:scale-105"
+                            className="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-red-500 transition-colors"
                         >
                             Confirm and Submit Report
                         </button>
