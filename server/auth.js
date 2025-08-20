@@ -157,7 +157,7 @@ app.get('/my-billboards', verifyUser, async (req, res) => {
 });
 
 // --- NEW HYBRID AI ROUTE (Calling Hugging Face) ---
-app.post('/analyze-hybrid', verifyUser, upload.single('billboardImage'), async (req, res) => {
+app.post('/analyze-hybrid', verifyUser, upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: "No image file uploaded." });
     }
