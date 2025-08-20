@@ -35,8 +35,8 @@ const DashboardPage = ({ navigate }: DashboardPageProps) => {
     const fetchMyReports = async () => {
       try {
         setIsLoading(true);
-        const data = await reportService.getMyBillboards();
-        setReports(data);
+    const reports = await reportService.fetchMyReports();
+        setReports(reports);
         setError(null);
       } catch (err) {
         console.error("Failed to fetch reports:", err);
