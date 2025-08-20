@@ -362,7 +362,7 @@ const LoginPage = ({ onLogin }) => {
                             <p><strong>Accuracy:</strong> 94.7% billboard detection & classification rate</p>
                             <p><strong>Processing:</strong> Real-time image analysis under 10 seconds</p>
                             <p><strong>Coverage:</strong> Supports 50+ municipal regulation frameworks</p>
-                            <p><strong>Integration:</strong>Yolo V8 and Gemini API</p>
+                            <p><strong>Integration:</strong> Yolo V8 and Gemini API</p>
                         </div>
                     </div>
                     
