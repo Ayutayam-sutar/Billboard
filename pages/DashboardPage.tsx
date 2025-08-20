@@ -234,15 +234,6 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
                 gradientTo="to-red-500"
                 colorClass="bg-gradient-to-br from-orange-400 to-red-500"
               />
-              <StatCard
-                icon={<DocumentChartBarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
-                label="SENT"
-                value={stats.totalReported}
-                description="Submitted Reports"
-                gradientFrom="from-purple-400"
-                gradientTo="to-pink-500"
-                colorClass="bg-gradient-to-br from-purple-400 to-pink-500"
-              />
             </div>
             
             <div className="animate-slide-up backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl" style={{animationDelay: '400ms'}}>
