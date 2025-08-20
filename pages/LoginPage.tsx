@@ -116,7 +116,7 @@ const LoginPage = ({ onLogin }) => {
                             <div className="space-y-6">
                                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
                                     <span className=" animate-tracking-in-expand bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                                        Smart Billboard
+                                        Smart Billubhai
                                     </span>
                                     <br />
                                     <span className=" animate-tracking-in-expand bg-gradient-to-r from-red-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
