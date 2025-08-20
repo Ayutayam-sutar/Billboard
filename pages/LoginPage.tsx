@@ -69,15 +69,7 @@ const LoginPage = ({ onLogin }) => {
         }
     };
 
-    const handleGoogleAuth = () => {
-        const googleUser = {
-            id: 'google_user',
-            name: 'Demo User',
-            email: 'demo@example.com',
-            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
-        };
-        onLogin(googleUser);
-    };
+   
 
     const features = [
         { icon: <CheckIcon className="h-5 w-5 text-emerald-600" />, text: "AI-powered billboard compliance detection" },
@@ -221,17 +213,7 @@ const LoginPage = ({ onLogin }) => {
                                                     </p>
                                                 </div>
                                                 
-                                                <button
-                                                    onClick={handleGoogleAuth}
-                                                    className="w-full group relative overflow-hidden bg-white hover:bg-gray-50 text-gray-700 font-semibold py-4 px-6 rounded-2xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 shadow-lg hover:shadow-xl"
-                                                >
-                                                    <div className="flex items-center justify-center space-x-3">
-                                                        <GoogleIcon className="h-6 w-6" />
-                                                        <span className="text-lg">Continue with Google</span>
-                                                    </div>
-                                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                                                </button>
-
+                                               
                                                 <div className="relative">
                                                     <div className="absolute inset-0 flex items-center">
                                                         <div className="w-full border-t border-gray-300" />
