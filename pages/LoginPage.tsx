@@ -219,7 +219,7 @@ const LoginPage = ({ onLogin }) => {
                                                         <div className="w-full border-t border-gray-300" />
                                                     </div>
                                                     <div className="relative flex justify-center">
-                                                        <span className="bg-white px-4 text-sm text-gray-500">Or continue with email</span>
+                                                        <span className="bg-white px-4 text-sm text-gray-500"> Continue With Email</span>
                                                     </div>
                                                 </div>
 
@@ -321,9 +321,9 @@ const LoginPage = ({ onLogin }) => {
 
                                                 <div className="text-center text-sm text-gray-500">
                                                     By continuing, you agree to our{' '}
-                                                    <a href="#" className="text-blue-600 hover:text-blue-800">Terms of Service</a>
+                                                    <a href="https://app.websitepolicies.com/policies/view/qkipmp8k" className="text-blue-600 hover:text-blue-800">Terms of Service</a>
                                                     {' '}and{' '}
-                                                    <a href="#" className="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                                                    <a href="https://app.websitepolicies.com/policies/view/mk3ruyhn" className="text-blue-600 hover:text-blue-800">Privacy Policy</a>
                                                 </div>
                                             </div>
                                         </motion.div>
@@ -360,9 +360,9 @@ const LoginPage = ({ onLogin }) => {
                         <div className="text-sm text-gray-600 space-y-2">
                             <p><strong>AI Model:</strong> Custom-trained computer vision using TensorFlow</p>
                             <p><strong>Accuracy:</strong> 94.7% billboard detection & classification rate</p>
-                            <p><strong>Processing:</strong> Real-time image analysis under 3 seconds</p>
+                            <p><strong>Processing:</strong> Real-time image analysis under 10 seconds</p>
                             <p><strong>Coverage:</strong> Supports 50+ municipal regulation frameworks</p>
-                            <p><strong>Integration:</strong> REST API & webhook support</p>
+                            <p><strong>Integration:</strong>Yolo V8 and Gemini API</p>
                         </div>
                     </div>
                     
