@@ -102,7 +102,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ reportId, onReportSubmit, navig
                             <p className="text-gray-600">{report.summary}</p>
                         </div>
                     </div>
-                    <div>
+                    <div className=".animate-bounce-in-top">
                         <h3 className="font-semibold text-gray-800 mb-2">Violations</h3>
                         <div className="space-y-2">
                             {report.violations.map((v, i) => (
