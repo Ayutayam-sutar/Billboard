@@ -129,7 +129,7 @@ app.post('/analyze-hybrid', verifyUser, upload.single('billboardImage'), async (
 
         // 1. Create a form and append the image file to it
         const form = new FormData();
-        form.append('billboardImage', fs.createReadStream(req.file.path), req.file.filename);
+        form.append('file', fs.createReadStream(req.file.path), req.file.filename);
         
         // 2. Send the form to your Hugging Face Space using axios
         const response = await axios.post(process.env.HUGGING_FACE_URL, form, {
