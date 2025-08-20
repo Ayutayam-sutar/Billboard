@@ -170,6 +170,9 @@ app.post('/analyze-hybrid', verifyUser, upload.single('billboardImage'), async (
     }
 });
 
+app.get('/', (req, res) => {
+    res.json({ status: "ok", message: "Server root is healthy" });
+});
 
 // --- Health Check Route ---
 app.get('/health', (req, res) => {
