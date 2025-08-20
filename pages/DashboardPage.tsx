@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Report, User } from '../types';
-import * as reportService from '../services/reportService';
 import * as authService from '../services/authService';
 import StatCard from '../components/StatCard';
 import ReportSummaryCard from '../components/ReportSummaryCard';
@@ -8,10 +7,10 @@ import AlertNotification from '../components/AlertNotification';
 import { CameraIcon, CheckCircleIcon, ExclamationTriangleIcon, DocumentChartBarIcon, StarIcon, MapPinIcon } from '../components/Icons';
 import OSMap from './OSMap';
 
-// We no longer import useNavigate
-
+// This is the correct interface that matches what App.tsx sends
 interface DashboardPageProps {
-
+  reports: Report[];
+  isLoading: boolean;
   navigate: (path: string) => void;
 }
 
@@ -21,34 +20,23 @@ interface Location {
   address: string;
 }
 
-// It now correctly accepts the 'navigate' prop from App.tsx
-const DashboardPage = ({ navigate }: DashboardPageProps) => {
-  const [reports, setReports] = useState<Report[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// <-- FIX 1: The component now correctly accepts ALL props from App.tsx
+const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => {
+  // --- REMOVED ---
+  // The component's own 'reports', 'isLoading', 'error', and 'setReports' state
+  // has been removed because App.tsx now manages all the data.
+  
+  // This state is fine because it's specific to the dashboard page itself
   const [user, setUser] = useState<User | null>(authService.getCurrentUser());
   const [currentLocation, setCurrentLocation] = useState<Location>({ lat: 20.2961, lng: 85.8245, address: 'Bhubaneswar, Odisha' });
   const [showMap, setShowMap] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  useEffect(() => {
-    const fetchMyReports = async () => {
-      try {
-        setIsLoading(true);
-    const reports = await reportService.fetchMyReports();
-        setReports(reports);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch reports:", err);
-        setError("Could not load your reports. Please try logging in again.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchMyReports();
-  }, []);
+  // --- REMOVED ---
+  // The useEffect hook that fetched reports has been removed.
+  // App.tsx now does this work.
 
-  // Your original geolocation logic is preserved
+  // This useEffect for geolocation is perfectly fine and remains.
   useEffect(() => {
     const getCurrentLocation = () => {
       if (navigator.geolocation) {
@@ -71,36 +59,30 @@ const DashboardPage = ({ navigate }: DashboardPageProps) => {
     setMapLoaded(true);
   }, []);
   
-  // Your original stats calculation logic is preserved
- const stats = useMemo(() => {
+  // This calculation now uses the fresh 'reports' prop from App.tsx. It is correct.
+  const stats = useMemo(() => {
     let contributionScore = 0;
     const totalAnalyses = reports.length;
     const totalViolations = reports.filter(r => r.violations && r.violations.length > 0).length;
     const totalReported = reports.filter(r => r.status === 'Reported').length;
 
-    // Calculate the contribution score
     reports.forEach(report => {
-        // +5 points for every analysis submitted
         contributionScore += 5;
-
-        // +10 points for every violation found in that report
         if (report.violations && report.violations.length > 0) {
             contributionScore += report.violations.length * 10;
         }
     });
 
     return { totalAnalyses, totalViolations, totalReported, contributionScore };
-}, [reports]);
+  }, [reports]);
 
   const toggleMap = () => setShowMap(!showMap);
 
+  // This now uses the 'isLoading' prop from App.tsx
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center font-bold text-xl">Loading Dashboard...</div>;
   }
   
-  if (error) {
-    return <div className="min-h-screen flex items-center justify-center text-red-600 font-bold text-xl">{error}</div>;
-  }
   
   // --- YOUR ENTIRE ORIGINAL UI IS 100% PRESERVED BELOW ---
   return (

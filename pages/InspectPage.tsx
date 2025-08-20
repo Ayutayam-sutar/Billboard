@@ -2,17 +2,15 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { User, Report } from '../types';
 import api from '../api';
 import AnalysisResult from '../components/AnalysisResult';
-// We have REMOVED the conflicting 'useNavigate' import.
 
-// The component now correctly accepts the 'user' and 'navigate' props from App.tsx
+// <-- FIX 1: The component now receives the 'onAnalysisComplete' function from App.tsx
 interface InspectPageProps {
   user: User;
+  onAnalysisComplete: () => void;
   navigate: (path: string) => void;
 }
 
-const InspectPage = ({ user, navigate }: InspectPageProps) => {
-  // We no longer call useNavigate() here.
-  
+const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) => { // <-- FIX 2: Accept the new function here
   const [imagePreview, setImagePreview] = useState<string>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [report, setReport] = useState<Report | null>(null);
@@ -71,8 +69,8 @@ const InspectPage = ({ user, navigate }: InspectPageProps) => {
         fetch(imageDataUrl)
             .then(res => res.blob())
             .then(blob => {
-                const capturedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
-                setImageFile(capturedFile);
+              const capturedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
+              setImageFile(capturedFile);
             });
 
         setMode('upload');
@@ -93,18 +91,21 @@ const InspectPage = ({ user, navigate }: InspectPageProps) => {
     setError('');
     try {
         const formData = new FormData();
-        formData.append('billboardImage', imageFile);
+        // <-- FIX 3: Use the correct field name 'file' to match the AI server
+        formData.append('file', imageFile); 
         const response = await api.post('/analyze-hybrid', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         setReport(response.data);
+        // <-- FIX 4: Call the refresh function to update the dashboard!
+        onAnalysisComplete(); 
     } catch (err) {
       setError('Analysis failed. Please try again. Check the server console for details.');
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, [imageFile]);
+  }, [imageFile, onAnalysisComplete]);
 
   const handleReset = () => {
     setImagePreview('');
@@ -112,7 +113,6 @@ const InspectPage = ({ user, navigate }: InspectPageProps) => {
     setReport(null);
     setError('');
   };
-
   // --- YOUR ENTIRE ORIGINAL UI IS 100% PRESERVED BELOW ---
   return (
     <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
