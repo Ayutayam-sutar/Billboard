@@ -17,8 +17,7 @@ RUN npm install
 COPY ./python_model/requirements.txt ./python_model/
 
 # Install all the Python libraries from the requirements file
-RUN pip install -r ./python_model/requirements.txt
-
+RUN pip install -r ./python_model/requirements.txt --break-system-packages
 # Copy the rest of your server code into the virtual computer
 COPY . .
 
