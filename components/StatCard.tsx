@@ -12,15 +12,15 @@ interface StatCardProps {
 
 const StatCard = ({ icon, value, label, colorClass }: StatCardProps): React.ReactNode => {
   return (
-    <div className="bg-amber-50 backdrop-blur-sm p-4 rounded-xl shadow-lg flex items-center space-x-4 border border-white/5 transition-all hover:border-white/20 hover:scale-105">
-      <div className={`p-3 rounded-lg ${colorClass}`}>
-        {icon}
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-black">{value}</p>
-        <p className="text-sm text-black">{label}</p>
-      </div>
-    </div>
+   <div className="bg-amber-50 backdrop-blur-sm p-4 sm:p-5 rounded-xl shadow-lg flex items-center space-x-4 sm:space-x-5 border border-amber-100 transition-all hover:border-amber-200 hover:scale-[1.02] duration-300">
+  <div className={`p-3 sm:p-4 rounded-lg ${colorClass} flex-shrink-0`}>
+    {icon}
+  </div>
+  <div className="min-w-0">
+    <p className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">{value}</p>
+    <p className="text-sm sm:text-base text-gray-700 font-medium mt-1">{label}</p>
+  </div>
+</div>
   );
 };
 

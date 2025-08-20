@@ -206,35 +206,38 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 animate-slide-up" style={{ animationDelay: '200ms' }}>
-              <StatCard
-                icon={<StarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
-                label="SCORE"
-               value={stats.contributionScore} 
-                description="Contribution Score"
-                gradientFrom="from-yellow-400"
-                gradientTo="to-orange-500"
-                colorClass=" bg-gradient-to-br from-yellow-400 to-orange-500"
-              />
-              <StatCard
-                icon={<CheckCircleIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
-                label="TOTAL"
-                value={stats.totalAnalyses}
-                description="Total Analyzed"
-                gradientFrom="from-green-400"
-                gradientTo="to-emerald-500"
-                colorClass="bg-gradient-to-br from-green-400 to-emerald-500"
-              />
-              <StatCard
-                icon={<ExclamationTriangleIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
-                label="FOUND"
-                value={stats.totalViolations}
-                description="Violations Found"
-                gradientFrom="from-orange-400"
-                gradientTo="to-red-500"
-                colorClass="bg-gradient-to-br from-orange-400 to-red-500"
-              />
-            </div>
+           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 animate-slide-up" style={{ animationDelay: '200ms' }}>
+  <StatCard
+    icon={<StarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
+    label="SCORE"
+    value={stats.contributionScore}
+    description="Contribution Score"
+    gradientFrom="from-yellow-400"
+    gradientTo="to-orange-500"
+    colorClass="bg-gradient-to-br from-yellow-400 to-orange-500"
+  
+  />
+  <StatCard
+    icon={<CheckCircleIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
+    label="TOTAL"
+    value={stats.totalAnalyses}
+    description="Total Analyzed"
+    gradientFrom="from-green-400"
+    gradientTo="to-emerald-500"
+    colorClass="bg-gradient-to-br from-green-400 to-emerald-500"
+  
+  />
+  <StatCard
+    icon={<ExclamationTriangleIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
+    label="FOUND"
+    value={stats.totalViolations}
+    description="Violations Found"
+    gradientFrom="from-orange-400"
+    gradientTo="to-red-500"
+    colorClass="bg-gradient-to-br from-orange-400 to-red-500"
+  
+  />
+</div>
             
             <div className="animate-slide-up backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl" style={{animationDelay: '400ms'}}>
               <div className="flex items-center justify-between mb-6">
