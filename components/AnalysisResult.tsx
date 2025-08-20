@@ -1,7 +1,7 @@
 import React from 'react';
 import { Report } from '../types';
-// We no longer need ViolationCard for this simple display
-// import ViolationCard from './ViolationCard'; 
+// We need a new component to display the detailed violation object
+import ViolationCard from './ViolationCard'; 
 import { CheckCircleIcon, ExclamationTriangleIcon, ArrowPathIcon, DocumentChartBarIcon, MapIcon } from './Icons';
 
 interface AnalysisResultProps {
@@ -11,16 +11,8 @@ interface AnalysisResultProps {
 }
 
 const AnalysisResult = ({ report, onReset, navigate }: AnalysisResultProps): React.ReactNode => {
-  // --- THIS IS THE FIX ---
-  // --- 🕵️‍♂️ FINAL INSPECTOR LOG ---
-  // This will print the data directly in your BROWSER's console (F12)
-  console.log("--- 🕵️‍♂️ Data received by AnalysisResult component ---");
-  console.log(report);
-  // --- END OF INSPECTOR ---
-
-  // We check if the violations array exists and is not empty.
-  const isCompliant = !report.violations || report.violations.length === 0;
-  // We determine compliance based on whether the violations array is empty.
+  // Compliance is now determined by the boolean flag from the AI, which is more reliable.
+  const isCompliant = report.is_compliant;
 
   return (
     <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 w-full animate-fade-in">
@@ -33,13 +25,20 @@ const AnalysisResult = ({ report, onReset, navigate }: AnalysisResultProps): Rea
             alt="Analyzed billboard" 
             className="w-full h-auto object-contain rounded-lg shadow-lg mb-4" 
           />
-          <div className="bg-gray-900/100 rounded-lg p-3 text-sm shadow-lg">
+          {/* FIX 1: Displaying the real summary and location from the AI report */}
+          <div className="bg-gray-900/100 rounded-lg p-3 text-sm shadow-lg space-y-2">
             <div className="flex items-start space-x-3">
               <MapIcon className="h-5 w-5 text-teal-400 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-semibold text-gray-200">Location Details</h4>
-                {/* We use a placeholder as this detail isn't in the YOLOv8 response yet */}
-                <p className="text-white">Analysis based on the uploaded image.</p>
+                <p className="text-white">{report.location_details || "Location not specified."}</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+               <DocumentChartBarIcon className="h-5 w-5 text-teal-400 flex-shrink-0 mt-0.5" />
+               <div>
+                <h4 className="font-semibold text-gray-200">AI Summary</h4>
+                <p className="text-white">{report.summary || "No summary provided."}</p>
               </div>
             </div>
           </div>
@@ -54,31 +53,26 @@ const AnalysisResult = ({ report, onReset, navigate }: AnalysisResultProps): Rea
             )}
             <div>
               <h3 className={`text-xl font-bold ${isCompliant ? 'text-green-300' : 'text-red-300'}`}>
+                {/* FIX 2: Using the real compliance status from the AI */}
                 {isCompliant ? 'Compliant' : 'Violations Found'}
               </h3>
-              {/* We use a summary based on the result */}
-              <p className="text-white">{isCompliant ? 'No violations were detected.' : 'One or more potential violations were found.'}</p>
+              <p className="text-white">{report.summary || (isCompliant ? 'No violations were detected.' : 'One or more potential violations were found.')}</p>
             </div>
           </div>
 
-          {/* --- THIS IS THE FIX --- */}
-          {/* We now correctly check and display the violations */}
-          {!isCompliant && (
+          {/* FIX 3: THE MAIN FIX - Correctly displaying the detailed violation OBJECTS */}
+          {report.violations && report.violations.length > 0 ? (
             <div className="space-y-3 max-h-80 bg-gray-100 rounded-lg p-4 overflow-y-auto pr-2">
               <h4 className="text-lg font-semibold text-black">Detected Violations:</h4>
-              {/* We map over the array of strings and display each one */}
-              {report.violations.map((violationText, index) => (
-                <div key={index} className="bg-white p-3 rounded-md shadow">
-                    <p className="text-gray-800">{violationText}</p>
-                </div>
+              {/* We map over the array of objects and pass each object to a new ViolationCard component */}
+              {report.violations.map((violation, index) => (
+                <ViolationCard violation={violation} />
               ))}
             </div>
-          )}
-
-          {isCompliant && (
-            <div className="text-center text-gray-700 p-4 bg-gray-100 rounded-lg">
-              No violations were detected based on the analysis.
-            </div>
+          ) : (
+             <div className="text-center text-gray-700 p-4 bg-gray-100 rounded-lg">
+               No violations were detected based on the analysis.
+             </div>
           )}
         </div>
       </div>
@@ -94,7 +88,8 @@ const AnalysisResult = ({ report, onReset, navigate }: AnalysisResultProps): Rea
         
         {!isCompliant && (
           <button
-            onClick={() => navigate ? navigate(`#/report/${report._id}`) : alert('Navigation failed!')}
+            // FIX 4: Correcting the navigation ID (database ID is `_id`)
+            onClick={() => navigate && report._id ? navigate(`/report/${report._id}`) : alert('Navigation failed!')}
             className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500 transition-colors"
           >
             <DocumentChartBarIcon className="h-5 w-5 mr-2" />
