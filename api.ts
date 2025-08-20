@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // This is now permanently set to your live backend address.
 // ❗️ You MUST replace the placeholder with your real Render URL.
-const API_BASE_URL = ' https://billboard-inspector-backend.onrender.com'; 
+const API_BASE_URL = 'https://billboard-inspector-backend.onrender.com'; 
 
 const api = axios.create({
   baseURL: API_BASE_URL,
