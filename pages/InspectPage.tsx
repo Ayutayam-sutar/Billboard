@@ -3,14 +3,17 @@ import { User, Report } from '../types';
 import api from '../api';
 import AnalysisResult from '../components/AnalysisResult';
 
-// <-- FIX 1: The component now receives the 'onAnalysisComplete' function from App.tsx
+// STEP 1: ADDED IMPORTS
+import { Capacitor } from '@capacitor/core';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 interface InspectPageProps {
   user: User;
   onAnalysisComplete: () => void;
   navigate: (path: string) => void;
 }
 
-const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) => { // <-- FIX 2: Accept the new function here
+const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) => {
   const [imagePreview, setImagePreview] = useState<string>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [report, setReport] = useState<Report | null>(null);
@@ -28,6 +31,51 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
     };
   }, []);
 
+  // STEP 2: MODIFIED startCamera FUNCTION
+  const startCamera = async () => {
+    // First, check if we are running on a native platform (Android/iOS)
+    if (Capacitor.isNativePlatform()) {
+      // --- THIS IS THE NEW NATIVE CAMERA LOGIC ---
+      try {
+        const image = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.Uri,
+          source: CameraSource.Camera,
+        });
+
+        if (image.webPath) {
+          setImagePreview(image.webPath);
+          const response = await fetch(image.webPath);
+          const blob = await response.blob();
+          const file = new File([blob], "from-camera.jpg", { type: "image/jpeg" });
+          setImageFile(file);
+        }
+      } catch (e) {
+        console.error("Native Camera Error:", e);
+        setError("Camera failed or permission was denied.");
+      }
+    } else {
+      // --- THIS IS YOUR ORIGINAL WEB CAMERA LOGIC, UNCHANGED ---
+      setMode('camera');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          }
+        });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (err) {
+        setError('Camera access denied. Please allow camera permissions.');
+        setMode('upload');
+      }
+    }
+  };
+
   const handleImageSelect = (file: File) => {
     setImageFile(file);
     const reader = new FileReader();
@@ -35,25 +83,6 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
       setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
-  };
-
-  const startCamera = async () => {
-    setMode('camera');
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: 'environment',
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        } 
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (err) {
-      setError('Camera access denied. Please allow camera permissions.');
-      setMode('upload');
-    }
   };
 
   const captureImage = () => {
@@ -91,13 +120,11 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
     setError('');
     try {
         const formData = new FormData();
-        // <-- FIX 3: Use the correct field name 'file' to match the AI server
         formData.append('file', imageFile); 
         const response = await api.post('/analyze-hybrid', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         setReport(response.data);
-        // <-- FIX 4: Call the refresh function to update the dashboard!
         onAnalysisComplete(); 
     } catch (err) {
       setError('Analysis failed. Please try again. Check the server console for details.');
@@ -113,7 +140,7 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
     setReport(null);
     setError('');
   };
-  // --- YOUR ENTIRE ORIGINAL UI IS 100% PRESERVED BELOW ---
+
   return (
     <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
       <div className=" animate-bounce-in-top max-w-6xl mx-auto">
@@ -153,10 +180,10 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
             </div>
           ) : report ? (
             <AnalysisResult 
-    report={report} 
-    onReset={handleReset} 
-    navigate={navigate} 
-  />
+              report={report} 
+              onReset={handleReset} 
+              navigate={navigate} 
+            />
           ) : mode === 'camera' ? (
             <div className="p-6">
               <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
