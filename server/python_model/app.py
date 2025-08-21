@@ -15,6 +15,25 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI(title="Hybrid Billboard Analysis API (YOLOv8 + Gemini)")
+# --- CORS MIDDLEWARE ---
+# This block must be added to allow your frontend app to communicate with this API
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost",                       # For Capacitor Android
+    "http://localhost:5173",                 # For your local Vite dev server
+    "https://billboard-inspect.netlify.app", # For your deployed Netlify frontend
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# --- END CORS MIDDLEWARE ---
+
 yolo_model = YOLO("best.pt")
 gemini_model = genai.GenerativeModel('gemini-1.5-flash') # Using 1.5-flash for better JSON handling
 
