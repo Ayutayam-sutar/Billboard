@@ -22,6 +22,7 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://billboard-inspect.netlify.app",
+  "http://localhost"
 ];
 const corsOptions = {
   origin: (origin, callback) => {
