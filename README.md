@@ -21,8 +21,8 @@
 
 | Category      | Technology                   |
 | ------------- | ---------------------------- |
-| **Frontend**  | React Native, Android Studio |
-| **Backend**   | Python                       |
+| **Frontend**  | React , Android Studio       |
+| **Backend**   | Python,Express               |
 | **Database**  | MongoDB Atlas                |
 | **AI Models** | YOLO v8, Gemini              |
 
@@ -63,3 +63,18 @@
 > ⚡ Aimed at making urban spaces smarter with AI & community-driven reporting
 
 ---
+
+##  Credits
+
+### Computer Vision Core
+*   **Model Architecture:** [YOLOv8](https://github.com/ultralytics/ultralytics) by Ultralytics.
+*   **Dataset:** The initial model weights and/or dataset were sourced from **[Roboflow](https://roboflow.com/)**.
+*   **Training Platform:** The model was fine-tuned on our custom dataset using **[Google AI Studio](https://aistudio.google.com/)** utilizing their GPU compute resources.
+
+### Infrastructure & Development
+*   **Deployment:** |Frontend : Netlify                   |
+                    |Backend : Render                     |
+                    |Trained Model : Hugging Face Spaces  |                 
+
+### AI Assistance
+*   Google Gemini, Deepseek , Google Ai Studio 
