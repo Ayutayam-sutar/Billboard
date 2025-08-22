@@ -1,4 +1,4 @@
-# 📡 Billboard Inspect
+# 📡 Billboard Inspector
 
 🔗 **Live Demo:** [Billboard Inspector](https://billboard-inspect.netlify.app/)
 
