@@ -42,7 +42,7 @@ export interface Report extends AnalysisResult {
     violations: Violation[];
     status: 'Pending' | 'Reported';
 }
-// Add this interface to your types.ts file
+
 
 export interface Billboard {
   _id: string; // The unique ID from the MongoDB database

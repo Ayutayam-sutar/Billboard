@@ -1,8 +1,8 @@
 // src/App.tsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { User, Report } from './types'; // <-- FIX 1: Import the 'Report' type
+import { User, Report } from './types'; // Import the 'Report' type
 import * as authService from './services/authService';
-import * as reportService from './services/reportService'; // Make sure this is imported
+import * as reportService from './services/reportService'; 
 
 // Import Pages
 import LoginPage from './pages/LoginPage';
@@ -71,7 +71,7 @@ const App = (): React.ReactNode => {
 
         if (route.startsWith('#/report/')) {
             const reportId = route.split('/')[2];
-            // <-- FIX 2: Pass the 'fetchReports' function down so the page can trigger a refresh ---
+            //  Pass the 'fetchReports' function down so the page can trigger a refresh ---
             return <ReportPage 
                         reportId={reportId} 
                         onReportSubmit={fetchReports} 
@@ -81,7 +81,7 @@ const App = (): React.ReactNode => {
 
         switch (route.toLowerCase()) {
             case '#/dashboard':
-                // <-- FIX 3: Pass the master 'reports' list and loading state down to the Dashboard ---
+                // Pass the master 'reports' list and loading state down to the Dashboard ---
                 return <DashboardPage 
                             reports={reports} 
                             isLoading={isLoading} 

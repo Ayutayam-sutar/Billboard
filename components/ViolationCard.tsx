@@ -19,8 +19,7 @@ const ViolationCard = ({ violation }: ViolationCardProps): React.ReactNode => {
         }
     };
 
-    // --- THIS IS THE FIX ---
-    // This function now returns complete strings, which Tailwind can detect.
+    
     const getSeverityStyles = () => {
         switch(violation.severity) {
             case Severity.High: 

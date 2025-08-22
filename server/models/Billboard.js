@@ -20,7 +20,7 @@ const billboardSchema = new mongoose.Schema({
     ref: 'Employee', 
     required: true
   },
-// This is a cleaner way to handle timestamps
+
 }, { timestamps: true });
 
 const BillboardModel = mongoose.model('Billboard', billboardSchema);

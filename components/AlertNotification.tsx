@@ -5,7 +5,7 @@ interface AlertNotificationProps {
   title: string;
   message: string;
   timestamp: string; 
-   type: 'error' | 'warning' | 'success' | 'info' | 'neutral'; // Add this line
+   type: 'error' | 'warning' | 'success' | 'info' | 'neutral'; 
 }
 
 const AlertNotification = ({ title, message, timestamp }: AlertNotificationProps): React.ReactNode => {

@@ -38,7 +38,7 @@ const LoginPage = ({ onLogin }) => {
     
      const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(''); // Clear previous errors
+        setError(''); 
 
         if (isSignUp) {
             if (password !== confirmPassword) {

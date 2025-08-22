@@ -23,7 +23,7 @@ android {
         }
     }
 
-    // V V V V V ADD THIS ENTIRE BLOCK V V V V V
+    
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def project = "Juggernaut_ITER_Billboard_Inspector React"
@@ -35,7 +35,7 @@ android {
             outputFileName = "${project}${SEP}${buildType}${SEP}${version}.apk"
         }
     }
-    // ^ ^ ^ ^ ^ END OF THE BLOCK TO ADD ^ ^ ^ ^ ^
+
 }
 
 repositories {

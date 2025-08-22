@@ -124,7 +124,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
       },
       { enableHighAccuracy: true }
     );
-  // <-- FIX: Empty dependency array ensures this runs only ONCE on mount.
+  //  Empty dependency array ensures this runs only ONCE on mount.
   }, []); 
 
   // 2. Initialize the map
@@ -145,8 +145,8 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-      // <-- FIX: Initialize layer groups but don't add them to the map yet.
-      // They will be added/removed in the update effect.
+      //  Initialize layer groups but don't add them to the map yet.
+      
       markersLayerRef.current = L.layerGroup();
       heatmapLayerRef.current = L.layerGroup();
       
@@ -159,7 +159,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, []); // <-- This effect should also run only once.
+  }, []); 
 
   // 3. Update map view when center or zoom changes
   useEffect(() => {
@@ -168,8 +168,8 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
     }
   }, [mapCenter, zoom, isMapReady]);
 
-  // 4. <-- FIX: Centralized logic to update all layers.
-  // This is the main fix that correctly clears and redraws layers.
+  // 4.  Centralized logic to update all layers.
+  
   useEffect(() => {
     if (!isMapReady || !mapRef.current || filteredBillboards.length === 0) return;
 

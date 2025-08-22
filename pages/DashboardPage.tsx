@@ -7,7 +7,7 @@ import AlertNotification from '../components/AlertNotification';
 import { CameraIcon, CheckCircleIcon, ExclamationTriangleIcon, DocumentChartBarIcon, StarIcon, MapPinIcon } from '../components/Icons';
 import OSMap from './OSMap';
 
-// This is the correct interface that matches what App.tsx sends
+
 interface DashboardPageProps {
   reports: Report[];
   isLoading: boolean;
@@ -20,11 +20,9 @@ interface Location {
   address: string;
 }
 
-// <-- FIX 1: The component now correctly accepts ALL props from App.tsx
+// The component now correctly accepts ALL props from App.tsx
 const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => {
-  // --- REMOVED ---
-  // The component's own 'reports', 'isLoading', 'error', and 'setReports' state
-  // has been removed because App.tsx now manages all the data.
+  
   
   // This state is fine because it's specific to the dashboard page itself
   const [user, setUser] = useState<User | null>(authService.getCurrentUser());
@@ -32,9 +30,7 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
   const [showMap, setShowMap] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  // --- REMOVED ---
-  // The useEffect hook that fetched reports has been removed.
-  // App.tsx now does this work.
+  
 
   // This useEffect for geolocation is perfectly fine and remains.
   useEffect(() => {
@@ -84,7 +80,7 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
   }
   
   
-  // --- YOUR ENTIRE ORIGINAL UI IS 100% PRESERVED BELOW ---
+  
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">

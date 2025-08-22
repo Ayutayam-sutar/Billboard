@@ -8,8 +8,8 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const axios = require('axios'); // We'll use axios to call Hugging Face
-const FormData = require('form-data'); // And form-data to send the image
+const axios = require('axios'); 
+const FormData = require('form-data'); 
 require('dotenv').config();
 
 const EmployeeModel = require('./models/Employee');
@@ -37,7 +37,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // --- Static File Serving ---
-// This makes sure your backend can serve the uploaded images
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Database Connection ---
@@ -132,7 +132,7 @@ app.patch('/my-billboards/:id', verifyUser, async (req, res) => {
         const updatedBillboard = await BillboardModel.findOneAndUpdate(
             { _id: req.params.id, uploadedBy: req.user.id },
             { $set: { status: status } },
-            { new: true } // This option returns the updated document
+            { new: true } 
         );
         if (!updatedBillboard) {
             return res.status(404).json({ message: "Report not found or you do not have permission to update it." });
@@ -163,7 +163,7 @@ app.post('/analyze-hybrid', verifyUser, upload.single('file'), async (req, res) 
         return res.status(400).json({ message: "No image file uploaded." });
     }
     
-    // Check if the Hugging Face URL is configured
+    
     if (!process.env.HUGGING_FACE_URL) {
         console.error("❌ HUGGING_FACE_URL environment variable is not set.");
         return res.status(500).json({ message: "AI service is not configured on the server." });
@@ -207,7 +207,7 @@ app.post('/analyze-hybrid', verifyUser, upload.single('file'), async (req, res) 
 
     } catch (err) {
         console.error("❌ Error calling Hugging Face or saving data:", err.message);
-        // Provide more detailed error if it's from axios
+        
         if (err.response) {
             console.error("Hugging Face Response Error:", err.response.data);
         }

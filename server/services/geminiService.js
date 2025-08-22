@@ -3,11 +3,10 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const fs = require("fs");
 
-// Make sure your .env file has this exact variable name: GEMINI_API_KEY
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// YOUR TEAM'S HARD WORK IS 100% PRESERVED HERE.
-// This is the detailed prompt that will guide the AI.
+
 const systemInstruction = `You are an AI assistant acting as a billboard compliance inspector for Indian cities, analyzing images based on a simplified version of the 'Model Outdoor Advertising Policy'.
 
 Your task is to analyze the provided image of a billboard, identify its location from visual cues, and determine if it complies with the following rules. Respond ONLY with the JSON format defined in the schema.
@@ -94,7 +93,7 @@ async function analyzeWithGemini(imagePath, mimeType) {
 
     } catch (error) {
         console.error("❌ Error calling Gemini API:", error);
-        // Instead of crashing, return a structured error that can be displayed
+        
         return {
             is_compliant: false,
             summary: "Critical error during Gemini AI analysis.",

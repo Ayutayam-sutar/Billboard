@@ -15,8 +15,8 @@ const EmployeeSchema = new mongoose.Schema({
     }
 });
 
-// IMPORTANT: Change "employees" to "Employee" here. 
-// This is the standard Mongoose practice and will make linking models easier.
+
+
 const EmployeeModel = mongoose.model("Employee", EmployeeSchema);
 
 module.exports = EmployeeModel;

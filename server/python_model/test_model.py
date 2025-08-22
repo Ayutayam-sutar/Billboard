@@ -9,7 +9,7 @@ def analyze_image(image_path):
         script_dir = os.path.dirname(__file__)
         model_path = os.path.join(script_dir, 'best.pt')
 
-        # Load your custom model
+        
         model = YOLO(model_path) 
 
         # Run prediction on the image from the Node.js server
@@ -26,14 +26,12 @@ def analyze_image(image_path):
         # --- Perform Violation Check ---
         violations = []
         billboards_found = 'billboard' in detected_classes
-        qr_codes_found = 'qr_code' in detected_classes # Assumes you have a 'qr_code' class
+        qr_codes_found = 'qr_code' in detected_classes 
 
         if billboards_found and not qr_codes_found:
             violations.append("Potential Missing License (No QR Code detected).")
         
-        # Add other checks here if needed, for example:
-        # if 'damaged_billboard' in detected_classes:
-        #     violations.append("Structural Hazard Detected.")
+        
 
         # Prepare the final result
         analysis_result = {
@@ -41,8 +39,8 @@ def analyze_image(image_path):
             "violations": violations
         }
         
-        # This is the most important line:
-        # It prints the results as a JSON string so your server can read it.
+        
+        # It prints the results as a JSON string so our server can read it.
         print(json.dumps(analysis_result))
 
     except Exception as e:
@@ -51,9 +49,9 @@ def analyze_image(image_path):
         print(json.dumps(error_message))
         sys.exit(1)
 
-# This part makes the script runnable
+
 if __name__ == "__main__":
-    # The image path is passed as an argument from your Node.js server
+    # The image path is passed as an argument from our Node.js server
     if len(sys.argv) > 1:
         image_path_from_nodejs = sys.argv[1]
         analyze_image(image_path_from_nodejs)

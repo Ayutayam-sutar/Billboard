@@ -17,8 +17,8 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI(title="Hybrid Billboard Analysis API (YOLOv8 + Gemini)")
 
-# --- CORS MIDDLEWARE (MUST BE AFTER APP CREATION) ---
-# This allows your frontend app to communicate with this API
+# --- CORS MIDDLEWARE 
+# This allows our frontend app to communicate with this API
 origins = [
     "http://localhost",
     "http://localhost:5173",
@@ -33,7 +33,7 @@ app.add_middleware(
 )
 
 yolo_model = YOLO("best.pt")
-gemini_model = genai.GenerativeModel('gemini-1.5-flash') # Using 1.5-flash for better JSON handling
+gemini_model = genai.GenerativeModel('gemini-1.5-flash') 
 
 # --- API ENDPOINTS ---
 @app.get("/")
