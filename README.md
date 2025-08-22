@@ -64,7 +64,7 @@
 
 ---
 
-##👏 Credits
+## 👏 Credits
 
 ### 💻 Computer Vision Core
 *   **Model Architecture:** [YOLOv8](https://github.com/ultralytics/ultralytics) by Ultralytics.
