@@ -69,7 +69,7 @@
 ### 💻 Computer Vision Core
 *   **Model Architecture:** [YOLOv8](https://github.com/ultralytics/ultralytics) by Ultralytics.
 *   **Dataset:** The initial model weights and/or dataset were sourced from **[Roboflow](https://roboflow.com/)**.
-*   **Training Platform:** The model was fine-tuned on our custom dataset using **[Google AI Studio](https://aistudio.google.com/)** utilizing their GPU compute resources.
+*   **Training Platform:** The model was fine-tuned on our custom dataset using **[Google Colab]((https://colab.research.google.com/))** utilizing their GPU compute resources.
 
 ### 👌 Infrastructure & Development
 *   **Deployment:** |Frontend : Netlify                   |
