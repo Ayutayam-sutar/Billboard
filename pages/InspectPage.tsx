@@ -3,7 +3,7 @@ import { User, Report } from '../types';
 import api from '../api';
 import AnalysisResult from '../components/AnalysisResult';
 
-// ADDED IMPORTS
+
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
@@ -31,11 +31,11 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
     };
   }, []);
 
-  // MODIFIED startCamera FUNCTION
+  
   const startCamera = async () => {
-    // First, check if we are running on a native platform (Android/iOS)
+    
     if (Capacitor.isNativePlatform()) {
-      // --- THIS IS THE NEW NATIVE CAMERA LOGIC ---
+      
       try {
         const image = await Camera.getPhoto({
           quality: 90,
@@ -56,7 +56,7 @@ const InspectPage = ({ user, onAnalysisComplete, navigate }: InspectPageProps) =
         setError("Camera failed or permission was denied.");
       }
     } else {
-      // --- THIS IS OUR ORIGINAL WEB CAMERA LOGIC
+      
       setMode('camera');
       try {
         const stream = await navigator.mediaDevices.getUserMedia({

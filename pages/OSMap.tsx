@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix default marker icons
+
 const DefaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -26,7 +26,7 @@ const OSMap: React.FC<OSMapProps> = ({ center, zoom, markerPosition, onCancel })
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [isMapReady, setIsMapReady] = useState(false);
 
-  // Initialize map only once
+  
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -55,7 +55,7 @@ const OSMap: React.FC<OSMapProps> = ({ center, zoom, markerPosition, onCancel })
     };
   }, []);
 
-  // Update map view when props change - only when map is ready
+  
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
 
@@ -63,7 +63,7 @@ const OSMap: React.FC<OSMapProps> = ({ center, zoom, markerPosition, onCancel })
     const currentCenter = map.getCenter();
     const currentZoom = map.getZoom();
     
-    // Check if we need to update the view
+    
     if (currentCenter.lat !== center[0] || currentCenter.lng !== center[1] || currentZoom !== zoom) {
       map.setView(center, zoom, {
         animate: true,
@@ -71,7 +71,7 @@ const OSMap: React.FC<OSMapProps> = ({ center, zoom, markerPosition, onCancel })
       });
     }
     
-    // Update marker position if needed
+    
     if (markerRef.current) {
       const currentMarkerPos = markerRef.current.getLatLng();
       if (currentMarkerPos.lat !== markerPosition[0] || currentMarkerPos.lng !== markerPosition[1]) {

@@ -172,27 +172,27 @@ app.post('/analyze-hybrid', verifyUser, upload.single('file'), async (req, res) 
     try {
         console.log(`Forwarding image to Hugging Face URL: ${process.env.HUGGING_FACE_URL}`);
 
-        // 1. Create a form and append the image file to it
+        
         const form = new FormData();
         form.append('file', fs.createReadStream(req.file.path), req.file.filename);
         
-        // 2. Send the form to your Hugging Face Space using axios
+        
         const response = await axios.post(process.env.HUGGING_FACE_URL, form, {
             headers: {
                 ...form.getHeaders()
             }
         });
 
-        // 3. The AI analysis now comes from the Hugging Face response
+        
         const analysisResult = response.data;
         console.log("✅ Received analysis from Hugging Face:", analysisResult);
 
-        // 4. Create the correct public URL for the saved image
+        
         const backendUrl = process.env.BACKEND_URL || `http://localhost:${PORT}`;
         const imageUrl = `${backendUrl}/uploads/${req.file.filename}`;
         const userId = req.user.id;
         
-        // 5. Save the results to your database
+        
         const newBillboard = new BillboardModel({
             imageUrl: imageUrl,
             violations: analysisResult.violations || [],

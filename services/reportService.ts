@@ -2,7 +2,7 @@
 import api from '../api';
 import { Report } from '../types';
 
-// This now fetches ALL reports from our live backend
+
 export const fetchMyReports = async (): Promise<Report[]> => {
   try {
     const response = await api.get('/my-billboards');
@@ -13,7 +13,7 @@ export const fetchMyReports = async (): Promise<Report[]> => {
   }
 };
 
-// This now fetches a SINGLE report from our live backend
+
 export const getReportById = async (reportId: string): Promise<Report | null> => {
   try {
     const response = await api.get(`/my-billboards/${reportId}`);
@@ -24,7 +24,7 @@ export const getReportById = async (reportId: string): Promise<Report | null> =>
   }
 };
 
-// This now updates a report's status on our live backend
+
 export const updateReportStatus = async (reportId: string, status: string): Promise<Report | null> => {
   try {
     const response = await api.patch(`/my-billboards/${reportId}`, { status });

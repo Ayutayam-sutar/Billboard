@@ -20,11 +20,11 @@ interface Location {
   address: string;
 }
 
-// The component now correctly accepts ALL props from App.tsx
+
 const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => {
   
   
-  // This state is fine because it's specific to the dashboard page itself
+  
   const [user, setUser] = useState<User | null>(authService.getCurrentUser());
   const [currentLocation, setCurrentLocation] = useState<Location>({ lat: 20.2961, lng: 85.8245, address: 'Bhubaneswar, Odisha' });
   const [showMap, setShowMap] = useState(false);
@@ -32,7 +32,7 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
 
   
 
-  // This useEffect for geolocation is perfectly fine and remains.
+  
   useEffect(() => {
     const getCurrentLocation = () => {
       if (navigator.geolocation) {
@@ -55,7 +55,7 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
     setMapLoaded(true);
   }, []);
   
-  // This calculation now uses the fresh 'reports' prop from App.tsx. It is correct.
+  
   const stats = useMemo(() => {
     let contributionScore = 0;
     const totalAnalyses = reports.length;
@@ -74,7 +74,7 @@ const DashboardPage = ({ reports, isLoading, navigate }: DashboardPageProps) => 
 
   const toggleMap = () => setShowMap(!showMap);
 
-  // This now uses the 'isLoading' prop from App.tsx
+  
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center font-bold text-xl">Loading Dashboard...</div>;
   }

@@ -40,9 +40,9 @@ const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
 
     let contributionScore = 0;
     reports.forEach(report => {
-        contributionScore += 5; // +5 for every report
+        contributionScore += 5;
         if (report.violations && report.violations.length > 0) {
-            contributionScore += report.violations.length * 10; // +10 for each violation
+            contributionScore += report.violations.length * 10; 
         }
     });
 

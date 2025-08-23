@@ -1,12 +1,12 @@
 // services/authService.ts
 
-import api from '../api'; // Our smart helper that adds the token to requests
-import { jwtDecode } from 'jwt-decode'; // The new library to read token info
-import { User } from '../types'; // Assuming your User type is defined here
+import api from '../api'; 
+import { jwtDecode } from 'jwt-decode'; 
+import { User } from '../types'; 
 
 const TOKEN_STORAGE_KEY = 'billboard_inspector_token';
 
-// Brick 1: The New Login Function
+
 
 export const login = async (email: string, password: string): Promise<User> => {
   try {
@@ -16,7 +16,7 @@ export const login = async (email: string, password: string): Promise<User> => {
       const { token } = response.data;
       localStorage.setItem(TOKEN_STORAGE_KEY, token);
       
-      // Decode the token to get user info immediately after login
+      
       const user = getCurrentUser();
       if (user) {
         return user;
@@ -33,13 +33,13 @@ export const login = async (email: string, password: string): Promise<User> => {
   }
 };
 
-// Brick 2: The New Logout Function
+
 
 export const logout = (): void => {
   localStorage.removeItem(TOKEN_STORAGE_KEY);
 };
 
-// Brick 3: The New Get Current User Function
+
 
 export const getCurrentUser = (): User | null => {
   try {
@@ -48,7 +48,7 @@ export const getCurrentUser = (): User | null => {
       return null;
     }
     
-    // The decoded token payload will have the user's id and name
+    
     const decodedToken: { id: string, name: string, exp: number } = jwtDecode(token);
 
     
@@ -61,9 +61,9 @@ export const getCurrentUser = (): User | null => {
     return {
       id: decodedToken.id,
       name: decodedToken.name,
-      email: '', // Not in token
-      avatar: `https://i.pravatar.cc/150?u=${decodedToken.id}`, // Generate a consistent avatar
-      contributionScore: 0 // Not in token
+      email: '', 
+      avatar: `https://i.pravatar.cc/150?u=${decodedToken.id}`, 
+      contributionScore: 0 
     };
 
   } catch (error) {

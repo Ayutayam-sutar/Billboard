@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  avatar: string; // URL to an avatar image
+  avatar: string; 
   contributionScore: number;
 }
 
@@ -37,17 +37,17 @@ export interface AnalysisResult {
 export interface Report extends AnalysisResult {
     _id: string;
     userId: string;
-    imageUrl: string; // The base64 image data url
-    timestamp: string; // ISO string
+    imageUrl: string; 
+    timestamp: string; 
     violations: Violation[];
     status: 'Pending' | 'Reported';
 }
 
 
 export interface Billboard {
-  _id: string; // The unique ID from the MongoDB database
+  _id: string; 
   imageUrl: string;
   violations: string[];
-  timestamp: string; // The date and time it was created
-  uploadedBy: string; // The ID of the user who uploaded it
+  timestamp: string; 
+  uploadedBy: string; 
 }

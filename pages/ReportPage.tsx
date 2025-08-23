@@ -38,7 +38,7 @@ const ReportPage: React.FC<ReportPageProps> = ({ reportId, onReportSubmit, navig
             try {
                 await reportService.updateReportStatus(report._id, 'Reported');
                 setSubmitted(true);
-                // This tells App.tsx to refresh the main reports list
+                
                 onReportSubmit(); 
             } catch (err) {
                 console.error("Failed to submit report:", err);

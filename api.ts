@@ -9,10 +9,10 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// This automatically adds your login token to every request.
+
 api.interceptors.request.use(
   (config) => {
-    // It correctly looks for 'billboard_inspector_token'.
+    
     const token = localStorage.getItem('billboard_inspector_token');
     
     if (token) {

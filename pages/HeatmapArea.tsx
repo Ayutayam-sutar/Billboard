@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Define types for our data
+
 interface FlaggedBillboard {
   id: string;
   latitude: number;
@@ -13,7 +13,7 @@ interface FlaggedBillboard {
   timestamp: string;
 }
 
-// --- Helper Function to Generate Dynamic Mock Data ---
+
 const generateMockData = (center: [number, number], count: number): FlaggedBillboard[] => {
   const [lat, lng] = center;
   const types: ('severe' | 'moderate' | 'minor')[] = ['severe', 'moderate', 'minor'];
@@ -45,7 +45,7 @@ interface BillboardHeatmapProps {
 }
 
 const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) => {
-  // --- Refs for map and layers ---
+  
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
@@ -53,7 +53,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
   const userMarkerRef = useRef<L.Marker | null>(null);
   const iconCacheRef = useRef<Map<string, L.DivIcon>>(new Map());
 
-  // --- State Management ---
+  
   const [mapCenter, setMapCenter] = useState<[number, number]>([20.2961, 85.8245]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [flaggedBillboards, setFlaggedBillboards] = useState<FlaggedBillboard[]>([]);
@@ -62,7 +62,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
   const [selectedSeverity, setSelectedSeverity] = useState<SeverityFilter>('all');
   const [status, setStatus] = useState('Locating...');
 
-  // --- Memoized Calculations ---
+  
   const filteredBillboards = useMemo(() => {
     if (selectedSeverity === 'all') {
       return flaggedBillboards;
@@ -79,7 +79,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
     return { severeCounts, filteredViolations, filteredCount: filteredBillboards.length };
   }, [flaggedBillboards, filteredBillboards]);
 
-  // --- Helper Functions ---
+  
   const getViolationColor = useCallback((type: string) => {
     switch (type) {
       case 'severe': return '#dc2626';
@@ -104,9 +104,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
     return icon;
   }, [getViolationColor]);
 
-  // --- Effects ---
-
-  // 1. Get user's location and generate data (runs only once)
+  
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -124,10 +122,10 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
       },
       { enableHighAccuracy: true }
     );
-  //  Empty dependency array ensures this runs only ONCE on mount.
+  
   }, []); 
 
-  // 2. Initialize the map
+  
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
       const map = L.map(mapContainerRef.current, {
@@ -145,7 +143,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-      //  Initialize layer groups but don't add them to the map yet.
+      
       
       markersLayerRef.current = L.layerGroup();
       heatmapLayerRef.current = L.layerGroup();
@@ -161,14 +159,14 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
     };
   }, []); 
 
-  // 3. Update map view when center or zoom changes
+  
   useEffect(() => {
     if (isMapReady && mapRef.current) {
       mapRef.current.setView(mapCenter, zoom, { animate: true, duration: 0.5 });
     }
   }, [mapCenter, zoom, isMapReady]);
 
-  // 4.  Centralized logic to update all layers.
+  
   
   useEffect(() => {
     if (!isMapReady || !mapRef.current || filteredBillboards.length === 0) return;
@@ -178,7 +176,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
     const heatmapGroup = heatmapLayerRef.current;
     if (!markersGroup || !heatmapGroup) return;
     
-    // Create user marker once and store it in the ref
+    
     if (userLocation && !userMarkerRef.current) {
       const userIcon = L.divIcon({
         html: `<div class="w-5 h-5 bg-blue-500 rounded-full border-2 border-white shadow-lg animate-pulse"></div>`,
@@ -192,11 +190,11 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
       }).bindPopup("<b>Your Location</b>");
     }
 
-    // Always start by clearing previous layers to prevent duplicates
+    
     markersGroup.clearLayers();
     heatmapGroup.clearLayers();
     
-    // Use requestAnimationFrame to batch DOM updates for a smoother render
+    
     requestAnimationFrame(() => {
       if (viewMode === 'heatmap') {
         if (map.hasLayer(markersGroup)) map.removeLayer(markersGroup);
@@ -207,7 +205,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
           const maxRadius = Math.min(intensity * 80, 400);
           const color = getViolationColor(billboard.violationType);
           
-          for (let i = 0; i < 2; i++) { // Create 2 circles for a softer glow effect
+          for (let i = 0; i < 2; i++) { 
             L.circle([billboard.latitude, billboard.longitude], {
               radius: maxRadius - (i * maxRadius / 3),
               fillColor: color,
@@ -218,11 +216,11 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
             }).addTo(heatmapGroup);
           }
         });
-      } else { // viewMode === 'markers'
+      } else { 
         if (map.hasLayer(heatmapGroup)) map.removeLayer(heatmapGroup);
         if (!map.hasLayer(markersGroup)) map.addLayer(markersGroup);
 
-        // Add user marker to the markers group
+        
         if (userMarkerRef.current) {
             markersGroup.addLayer(userMarkerRef.current);
         }
@@ -245,7 +243,7 @@ const HeatmapArea: React.FC<BillboardHeatmapProps> = ({ onClose, zoom = 12 }) =>
 
   }, [isMapReady, viewMode, filteredBillboards, userLocation, getViolationColor, getMarkerIcon]);
 
-  // --- Render JSX ---
+  
   return (
     <div className="relative h-screen w-full bg-gray-900 text-white font-sans">
       {/* Header */}

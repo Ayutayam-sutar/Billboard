@@ -45,7 +45,7 @@ const LoginPage = ({ onLogin }) => {
                 return setError("Passwords do not match!");
             }
             try {
-                // 2. Use 'api.post' which automatically uses the correct server address
+                
                 await api.post('/register', { name, email, password });
                 alert('Registration successful! Please sign in to continue.');
                 setIsSignUp(false);
@@ -54,11 +54,11 @@ const LoginPage = ({ onLogin }) => {
             }
         } else {
             try {
-                // 2. Use 'api.post' here as well
+                
                 const result = await api.post('/login', { email, password });
                 if (result.data.token) {
                     const token = result.data.token;
-                    // 3. Use the CORRECT key to save the token
+                    
                     localStorage.setItem('billboard_inspector_token', token);
                     const decodedUser: User = jwtDecode(token);
                     onLogin(decodedUser);

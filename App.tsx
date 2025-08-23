@@ -1,10 +1,10 @@
 // src/App.tsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { User, Report } from './types'; // Import the 'Report' type
+import { User, Report } from './types'; 
 import * as authService from './services/authService';
 import * as reportService from './services/reportService'; 
 
-// Import Pages
+
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
@@ -19,7 +19,7 @@ const App = (): React.ReactNode => {
 
     const navigate = useCallback((path: string) => {
         window.location.hash = path;
-        setRoute(path); // Also update route state immediately
+        setRoute(path); 
     }, []);
 
     useEffect(() => {
@@ -33,11 +33,11 @@ const App = (): React.ReactNode => {
         };
     }, []);
 
-    // --- Master list of reports now lives here ---
+    
     const [reports, setReports] = useState<Report[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // --- Function to fetch/refresh the reports ---
+    
     const fetchReports = async () => {
         setIsLoading(true);
         const fetchedReports = await reportService.fetchMyReports();
@@ -45,7 +45,7 @@ const App = (): React.ReactNode => {
         setIsLoading(false);
     };
 
-    // --- Fetch reports when the user logs in ---
+    
     useEffect(() => {
         if (user) {
             fetchReports();
@@ -60,7 +60,7 @@ const App = (): React.ReactNode => {
     const handleLogout = () => {
         authService.logout();
         setUser(null);
-        setReports([]); // Clear reports on logout
+        setReports([]); 
         navigate('#/login');
     };
 
@@ -71,7 +71,7 @@ const App = (): React.ReactNode => {
 
         if (route.startsWith('#/report/')) {
             const reportId = route.split('/')[2];
-            //  Pass the 'fetchReports' function down so the page can trigger a refresh ---
+            
             return <ReportPage 
                         reportId={reportId} 
                         onReportSubmit={fetchReports} 
@@ -81,14 +81,14 @@ const App = (): React.ReactNode => {
 
         switch (route.toLowerCase()) {
             case '#/dashboard':
-                // Pass the master 'reports' list and loading state down to the Dashboard ---
+                
                 return <DashboardPage 
                             reports={reports} 
                             isLoading={isLoading} 
                             navigate={navigate} 
                         />;
             case '#/inspect':
-                // Pass fetchReports to InspectPage so it can refresh after a new analysis
+                
                 return <InspectPage 
                             user={user} 
                             onAnalysisComplete={fetchReports} 
